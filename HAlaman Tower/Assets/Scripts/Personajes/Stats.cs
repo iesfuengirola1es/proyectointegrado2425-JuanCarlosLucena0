@@ -24,6 +24,8 @@ public class Stats : MonoBehaviour
         this.spirit = spirit;
     }
 
+
+
     public Stats Clone()
     {
         return new Stats(this.lvl, this.maxHealth, this.attack, this.defense, this.spirit);

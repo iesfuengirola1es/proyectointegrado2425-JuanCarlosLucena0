@@ -14,7 +14,7 @@ public class StatusPanel : MonoBehaviour
     public Image healthSliderBar;
     public TextMeshProUGUI healthLabel;
 
-    public void SetStats(string name, Stats stats)
+    public void SetStats( Stats stats, string name= "Player")
     {
         this.nameLabel.text = name;
 

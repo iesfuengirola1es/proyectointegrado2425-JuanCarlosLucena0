@@ -88,22 +88,36 @@ public class CombatManager : MonoBehaviour
 
                 //Comprobaciones de la victoria
                 case CombatStatus.CHECK_FOR_VICTORY:
-                    foreach (var fgtr in this.fighters)
+                    Fighter player = this.fighters[0]; // Se asume que el jugador es el primero en la lista
+                    Fighter enemy = this.fighters[1];  // Se asume que el enemigo es el segundo
+
+                    // Si el enemigo ha sido derrotado, el jugador gana
+                    if (!enemy.isALive)
                     {
-                        //Comprueba si el luchador esta vivo, da victoria si no lo esta, continua el combate si lo está
-                        if(fgtr.isALive == false)
-                        {
-                            this.isCombatActive = false;
+                        this.isCombatActive = false;
+                        LogPanel.Write("Victory!");
 
-                            LogPanel.Write("Victory!");
-                        }
-                        else
-                        {
-                            this.combatStatus = CombatStatus.NEXT_TURN;
-                        }
+                        // Subir de nivel al jugador
+                        player.LevelUp();
+
+                      /*  LogPanel.Write($"{player.idName} ahora tiene:" +
+                   $"\nSalud: {player.stats.health}/{player.stats.maxHealth}" +
+                   $"\nAtaque: {player.stats.attack}" +
+                   $"\nDefensa: {player.stats.defense}");*/
                     }
-                    yield return null;
+                    // Si el jugador ha sido derrotado, la IA gana
+                    else if (!player.isALive)
+                    {
+                        this.isCombatActive = false;
+                        LogPanel.Write("Defeated!");
+                    }
+                    // Si ambos siguen vivos, continúa el combate
+                    else
+                    {
+                        this.combatStatus = CombatStatus.NEXT_TURN;
+                    }
 
+                    yield return null;
                     break;
 
 

@@ -9,7 +9,7 @@ public abstract class Fighter : MonoBehaviour
 
     public CombatManager combatManager;
 
-    protected Stats stats;
+    public Stats stats;
 
     protected Skill[] skills;
 
@@ -21,7 +21,7 @@ public abstract class Fighter : MonoBehaviour
 
     protected virtual void Start()
     {
-        this.statusPanel.SetStats(this.idName, this.stats);
+        this.statusPanel.SetStats(name: this.idName, stats: this.stats);
 
         this.skills = this.GetComponentsInChildren<Skill>();
     }
@@ -35,6 +35,19 @@ public abstract class Fighter : MonoBehaviour
         this.stats.health = Mathf.Round(this.stats.health);
 
         this.statusPanel.SetHealth(this.stats.health, this.stats.maxHealth);
+    }
+
+    public void LevelUp()
+    {
+        Debug.Log($"Antes del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
+
+
+        this.stats.lvl++;
+        this.stats.maxHealth += 5; // Restaurar salud al subir de nivel
+        this.stats.attack += 1;  // Aumentar ataque (puedes cambiarlo)
+        this.stats.defense += 1; // Aumentar defensa (opcional)
+
+        Debug.Log($"Después del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
     }
 
     public Stats GetCurrentStats()

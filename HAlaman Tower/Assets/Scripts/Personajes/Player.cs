@@ -8,6 +8,8 @@ public class Player : Fighter
     [Header("UI")]
     public PlayerSkillsPanel skillsPanel;
 
+    //public Stats stats;
+
     private void Awake()
     {
 
