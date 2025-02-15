@@ -42,15 +42,42 @@ public abstract class Fighter : MonoBehaviour
         Debug.Log($"Antes del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
 
 
+        float previousHP = this.stats.maxHealth;
+        float previousATK = this.stats.attack;
+        float previousDEF = this.stats.defense;
+
         this.stats.lvl++;
-        this.stats.maxHealth += 5; // Restaurar salud al subir de nivel
-        this.stats.attack += 1;  // Aumentar ataque (puedes cambiarlo)
-        this.stats.defense += 1; // Aumentar defensa (opcional)
+        this.stats.maxHealth += Random.Range(3, 6); ;
+        this.stats.attack += Random.Range(1, 4);
+        this.stats.defense += Random.Range(1, 4);
+
+        LogPanel.Write($"{this.idName} ha subido a Nivel {this.stats.lvl}!");
+
+        StartCoroutine(ShowStatChanges(previousHP, previousATK, previousDEF));
+
+        statusPanel.SetHealth(this.stats.health, this.stats.maxHealth);
 
         Debug.Log($"Después del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
     }
 
-    public Stats GetCurrentStats()
+    private IEnumerator ShowStatChanges(float previousHP, float previousATK, float previousDEF)
+    {
+        // Esperar 3 segundos antes de mostrar los cambios de estadísticas
+        yield return new WaitForSeconds(3f);
+
+        // Mostrar los cambios de estadísticas en el log durante 5 segundos
+        LogPanel.Write($"HP: {previousHP} -> {this.stats.maxHealth}\n" +
+                        $"Ataque: {previousATK} -> {this.stats.attack}\n" +
+                        $"Defensa: {previousDEF} -> {this.stats.defense}");
+
+        // Esperar 5 segundos antes de pasar al siguiente mensaje
+        yield return new WaitForSeconds(5f);
+
+        // Aquí podríamos limpiar el log o hacer algo más si es necesario
+        LogPanel.Write(""); // Limpiar el log o mostrar el siguiente mensaje
+    }
+
+        public Stats GetCurrentStats()
     {
 
         return this.stats;
