@@ -13,7 +13,7 @@ public enum CombatStatus
 public class CombatManager : MonoBehaviour
 {
 
-    public Fighter[] fighters;
+    public List<Fighter> fighters;  // Usar List<Fighter> en lugar de Fighter[]
     public int fighterIndex;
 
     private bool isCombatActive;
@@ -32,7 +32,7 @@ public class CombatManager : MonoBehaviour
         LogPanel.Write("Battle initiated");
 
         // Verificar si hay un enemigo. Si no, generar uno
-        if (fighters.Length < 2 || fighters[1] == null)
+        if (fighters.Count < 2 || fighters[1] == null)
         {
             enemySpawner.SpawnEnemy(); // Generar enemigo si falta
         }
@@ -151,7 +151,7 @@ public class CombatManager : MonoBehaviour
                     yield return new WaitForSeconds(1f);
 
                     //Actualizamos  el turno asignandoselo a la siguiente persona
-                    this.fighterIndex = (this.fighterIndex + 1) % this.fighters.Length;
+                    this.fighterIndex = (this.fighterIndex + 1) % this.fighters.Count;
 
 
                     var currentTurn = this.fighters[this.fighterIndex];
@@ -169,24 +169,18 @@ public class CombatManager : MonoBehaviour
     }
 
     public void AddFighter(Fighter newFighter)
-{
-    List<Fighter> fighterList = new List<Fighter>(this.fighters);
-    fighterList.Add(newFighter);
-    this.fighters = fighterList.ToArray();
-
-    newFighter.combatManager = this;  // Asignamos el CombatManager al nuevo luchador
-
-}
-
-public void RemoveFighter(Fighter fighterToRemove)
-{
-    List<Fighter> fighterList = new List<Fighter>(this.fighters);
-    if (fighterList.Contains(fighterToRemove))
     {
-        fighterList.Remove(fighterToRemove);
-        this.fighters = fighterList.ToArray();
+        this.fighters.Add(newFighter); // Usamos .Add() en lugar de convertir a lista
+        newFighter.combatManager = this;  // Asignamos el CombatManager al nuevo luchador
     }
-}
+
+    public void RemoveFighter(Fighter fighterToRemove)
+    {
+        if (this.fighters.Contains(fighterToRemove))
+        {
+            this.fighters.Remove(fighterToRemove); // Usamos .Remove() en lugar de convertir a lista
+        }
+    }
 
 
     public Fighter GetOppositeFighter()

@@ -34,18 +34,14 @@ public class EnemySpawner : MonoBehaviour
             Enemy enemy = fighter as Enemy;
             if (enemy != null)
             {
-                // Aquí agregamos al enemigo en el índice 1 del array fighters
-                this.combatManager.fighters[1] = enemy; // Agregar al índice 1
+                // Agregamos al enemigo a la lista usando AddFighter
+                this.combatManager.AddFighter(enemy);
 
                 enemy.statusPanel.SetStats(enemy.stats, enemy.idName); // Actualiza las estadísticas
 
-                // Aseguramos que el turno del enemigo se inicie correctamente
-                this.combatManager.fighterIndex = 1; // Establecer el índice para el turno del enemigo
-
-                // Actualiza el estado del combate para continuar
+                // Aquí aseguramos que el combate pase a la siguiente fase después de respawnear el enemigo.
                 this.combatManager.combatStatus = CombatStatus.NEXT_TURN; // Cambiar a NEXT_TURN
-
- 
+                this.combatManager.fighterIndex = 1; // Establecer al nuevo enemigo como el siguiente en el turno.
             }
         }
         else
@@ -62,7 +58,7 @@ public class EnemySpawner : MonoBehaviour
             Fighter fighter = currentEnemy.GetComponent<Fighter>();
             if (fighter != null)
             {
-                combatManager.RemoveFighter(fighter); // Asegurarnos de remover al enemigo del CombatManager antes de destruirlo
+                this.combatManager.RemoveFighter(fighter); // Elimina el enemigo de la lista
             }
 
             Destroy(currentEnemy);
@@ -71,12 +67,19 @@ public class EnemySpawner : MonoBehaviour
     }
     public void RespawnEnemy()
     {
-        RemoveEnemy();  // Elimina el enemigo anterior
-        SpawnEnemy();   // Crea uno nuevo
+        // Elimina el enemigo anterior (si existe)
+        if (this.combatManager.fighters.Count > 1) // Asegurarse de que hay más de 1 luchador
+        {
+            RemoveEnemy();  // Elimina el enemigo anterior
+        }
+
+        // Crea un nuevo enemigo
+        SpawnEnemy();
 
         // Aquí aseguramos que el combate pase a la siguiente fase después de respawnear el enemigo.
-        combatManager.fighterIndex = 1; // Establecer al nuevo enemigo como el siguiente en el turno.
-        combatManager.combatStatus = CombatStatus.NEXT_TURN; // Cambiar a NEXT_TURN
+        this.combatManager.combatStatus = CombatStatus.NEXT_TURN; // Cambiar a NEXT_TURN
+        this.combatManager.fighterIndex = 1; // Establecer al nuevo enemigo como el siguiente en el turno.
+
     }
 
 
