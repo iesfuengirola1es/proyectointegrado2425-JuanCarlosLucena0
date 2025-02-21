@@ -14,12 +14,14 @@ public class CombatManager : MonoBehaviour
 {
 
     public Fighter[] fighters;
-    private int fighterIndex;
+    public int fighterIndex;
 
     private bool isCombatActive;
 
+    public EnemySpawner enemySpawner;
+
     //Para diferenciar los distintos estados del combate
-    private CombatStatus combatStatus;
+    public CombatStatus combatStatus;
 
     private Skill currentFighterSkill;
 
@@ -29,27 +31,27 @@ public class CombatManager : MonoBehaviour
     {
         LogPanel.Write("Battle initiated");
 
-        //asigna una referencia al combat manager en cada luchador para q los luchadores puedan enviar las habilidades q ejecutan
-        //se apoya en "currentFighterSkill" para hacerlo
-        foreach (var fgtr in this.fighters)
+        // Verificar si hay un enemigo. Si no, generar uno
+        if (fighters.Length < 2 || fighters[1] == null)
         {
-            fgtr.combatManager = this;
-
+            enemySpawner.SpawnEnemy(); // Generar enemigo si falta
         }
 
-        //pasamos el turno
-        this.combatStatus = CombatStatus.NEXT_TURN;
-        
-        //se lo damos al q tenga index 0, nuestro personaje en este caso (inicia en -1 ya que iniciamos pasando el turno al index 0)
+        // Asegurar que todos los luchadores tengan referencia al CombatManager
+        foreach (var fgtr in this.fighters)
+        {
+            if (fgtr != null) // Evitar errores si hay algún slot vacío
+            {
+                fgtr.combatManager = this;
+            }
+        }
+
         this.fighterIndex = -1;
-
-        //activamos el combate
-
         this.isCombatActive = true;
 
-        //encnedemos el combate por turnos
-
+        Debug.Log("Llega");
         StartCoroutine(this.CombatLoop());
+
     }
 
     IEnumerator CombatLoop()
@@ -100,10 +102,30 @@ public class CombatManager : MonoBehaviour
                         // Subir de nivel al jugador
                         player.LevelUp();
 
-                      /*  LogPanel.Write($"{player.idName} ahora tiene:" +
-                   $"\nSalud: {player.stats.health}/{player.stats.maxHealth}" +
-                   $"\nAtaque: {player.stats.attack}" +
-                   $"\nDefensa: {player.stats.defense}");*/
+                        // Esperar un momento antes de reemplazar al enemigo (opcional)
+                        yield return new WaitForSeconds(8f);
+
+                        // Reemplazar enemigo con uno nuevo
+                        enemySpawner.RespawnEnemy();
+
+                        // Esperar a que el nuevo enemigo se genere antes de continuar el combate
+                        yield return new WaitForSeconds(0.5f);
+
+                        // **NUEVO CÓDIGO: Obtener y asignar el nuevo enemigo**
+                        Fighter newEnemy = enemySpawner.currentEnemy.GetComponent<Fighter>();
+
+                        if (newEnemy != null)
+                        {
+                            // Reemplazar el enemigo en la lista de fighters
+                            this.fighters[1] = newEnemy;
+
+                            // Asignar CombatManager al nuevo enemigo
+                            newEnemy.combatManager = this;
+                        }
+
+                        // Reactivar combate y continuar con el siguiente turno
+                        this.isCombatActive = true;
+                        this.combatStatus = CombatStatus.NEXT_TURN;
                     }
                     // Si el jugador ha sido derrotado, la IA gana
                     else if (!player.isALive)
@@ -119,6 +141,7 @@ public class CombatManager : MonoBehaviour
 
                     yield return null;
                     break;
+
 
 
 
@@ -144,6 +167,26 @@ public class CombatManager : MonoBehaviour
             }
         }
     }
+
+    public void AddFighter(Fighter newFighter)
+{
+    List<Fighter> fighterList = new List<Fighter>(this.fighters);
+    fighterList.Add(newFighter);
+    this.fighters = fighterList.ToArray();
+
+    newFighter.combatManager = this;  // Asignamos el CombatManager al nuevo luchador
+
+}
+
+public void RemoveFighter(Fighter fighterToRemove)
+{
+    List<Fighter> fighterList = new List<Fighter>(this.fighters);
+    if (fighterList.Contains(fighterToRemove))
+    {
+        fighterList.Remove(fighterToRemove);
+        this.fighters = fighterList.ToArray();
+    }
+}
 
 
     public Fighter GetOppositeFighter()
