@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     public CombatManager combatManager; // Referencia al CombatManager
 
 
-    public void SpawnEnemy()
+    public void SpawnEnemy(int level=1)
     {
         if (enemyPrefabs.Length == 0)
         {
@@ -27,6 +27,22 @@ public class EnemySpawner : MonoBehaviour
         Fighter fighter = currentEnemy.GetComponent<Fighter>();
         if (fighter != null)
         {
+            // Generar estadísticas aleatorias según el nivel
+            int health = level * Random.Range(8, 11);
+            int attack = level * Random.Range(1, 3);
+            int defense = level * Random.Range(1, 3);
+            int spirit = 3;
+
+            if (level % 10 == 0)
+            {
+                health = level * 12;
+                attack = level * 5;
+                defense = level * 3;
+            }
+
+            fighter.stats = new Stats(level, health, attack, defense, spirit);
+            Debug.Log($"Attack: {attack}, Defense: {defense}");
+
             // Asignar el StatusPanel del spawner al nuevo enemigo
             fighter.statusPanel = statusPanel; // Asigna el StatusPanel
 
@@ -67,14 +83,21 @@ public class EnemySpawner : MonoBehaviour
     }
     public void RespawnEnemy()
     {
-        // Elimina el enemigo anterior (si existe)
-        if (this.combatManager.fighters.Count > 1) // Asegurarse de que hay más de 1 luchador
+        int newLevel = 1; // Nivel base
+
+        if (currentEnemy != null)
         {
+            Enemy oldEnemy = currentEnemy.GetComponent<Enemy>();
+            if (oldEnemy != null)
+            {
+                newLevel = oldEnemy.stats.lvl + 1; // Subir de nivel al siguiente enemigo
+            }
+
             RemoveEnemy();  // Elimina el enemigo anterior
         }
 
-        // Crea un nuevo enemigo
-        SpawnEnemy();
+        SpawnEnemy(newLevel);  // Spawnea un nuevo enemigo con stats aleatorios basados en su nivel
+
 
         // Aquí aseguramos que el combate pase a la siguiente fase después de respawnear el enemigo.
         this.combatManager.combatStatus = CombatStatus.NEXT_TURN; // Cambiar a NEXT_TURN

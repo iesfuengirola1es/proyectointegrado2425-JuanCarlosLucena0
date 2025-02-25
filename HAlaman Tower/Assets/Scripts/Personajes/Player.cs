@@ -13,7 +13,7 @@ public class Player : Fighter
     private void Awake()
     {
 
-        this.stats = new Stats(69, 69, 69, 69, 69);
+        this.stats = new Stats(1, 25, 7, 2, 5);
 
     }
 

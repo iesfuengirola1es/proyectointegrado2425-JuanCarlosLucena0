@@ -39,8 +39,9 @@ public class HealthModSkill : Skill
 
                 // Formula de daño
                 float rawDamage = (((2 * emitterStats.lvl) / 5) + 2) * this.amount * (emitterStats.attack / reciverStats.defense);
-
-                return (rawDamage / 50) + 2;
+                Debug.Log($"lvl: {emitterStats.lvl}, atk: {emitterStats.attack}, def: {reciverStats.defense}, amount: {this.amount}, rawDamage: {rawDamage}");
+                Debug.Log((rawDamage/50) - 2);
+                return (rawDamage / 50) - 2;
 
             case HealthModType.FIXED:
                 return this.amount;

@@ -46,8 +46,11 @@ public abstract class Fighter : MonoBehaviour
         float previousATK = this.stats.attack;
         float previousDEF = this.stats.defense;
 
-        this.stats.lvl++;
-        this.stats.maxHealth += Random.Range(3, 6); ;
+        float hpGain= Random.Range(3, 6);
+
+        float actualLevel=this.stats.lvl++;
+        this.stats.maxHealth += hpGain;
+        this.stats.health += hpGain;
         this.stats.attack += Random.Range(1, 4);
         this.stats.defense += Random.Range(1, 4);
 
@@ -56,6 +59,7 @@ public abstract class Fighter : MonoBehaviour
         StartCoroutine(ShowStatChanges(previousHP, previousATK, previousDEF));
 
         statusPanel.SetHealth(this.stats.health, this.stats.maxHealth);
+        statusPanel.levelLable.text = $"Lvl {this.stats.lvl}";
 
         Debug.Log($"Después del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
     }

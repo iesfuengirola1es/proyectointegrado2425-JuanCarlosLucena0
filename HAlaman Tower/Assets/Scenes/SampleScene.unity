@@ -653,7 +653,7 @@ GameObject:
   - component: {fileID: 93644830}
   - component: {fileID: 93644831}
   m_Layer: 0
-  m_Name: Dragon furry
+  m_Name: Burn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -690,7 +690,7 @@ MonoBehaviour:
   animationDuration: 1
   selfInflicted: 0
   effectPrfb: {fileID: 8171373853705526921, guid: 31c8c27dfb42da54e9548d06b9d705f3, type: 3}
-  amount: -40
+  amount: -100
   modType: 1
 --- !u!1 &117054091
 GameObject:
@@ -2204,7 +2204,7 @@ MonoBehaviour:
   animationDuration: 1
   selfInflicted: 1
   effectPrfb: {fileID: 8171373853705526921, guid: 31c8c27dfb42da54e9548d06b9d705f3, type: 3}
-  amount: 0.2
+  amount: 0.33
   modType: 2
 --- !u!224 &1122990317 stripped
 RectTransform:
