@@ -101,6 +101,7 @@ public class CombatManager : MonoBehaviour
 
                         // Subir de nivel al jugador
                         player.LevelUp();
+                        CheckLevelUp(player);
 
                         // Esperar un momento antes de reemplazar al enemigo (opcional)
                         yield return new WaitForSeconds(8f);
@@ -202,4 +203,40 @@ public class CombatManager : MonoBehaviour
         this.currentFighterSkill = skill;
         this.combatStatus = CombatStatus.FIGHTER_ACTION;
     }
+
+    public void CheckLevelUp(Fighter player)
+    {
+        if (player.stats.lvl % 10 == 1 && player.stats.lvl != 1) // Si es nivel 11, 21, 31...
+        {
+            Debug.Log("Mostrando popup de mejora...");
+            ShowUpgradePopup(player); // Pasamos el jugador
+        }
+    }
+
+    void ShowUpgradePopup(Fighter player)
+    {
+        UpgradePopup.Instance.Show(player, OnUpgradeSelected);
+        Debug.Log($"player preupgrade hp:{player.stats.maxHealth},  player attack: {player.stats.attack}, player defense: {player.stats.defense}");
+    }
+
+    void OnUpgradeSelected(Fighter player, UpgradeType upgrade)
+    {
+        switch (upgrade)
+        {
+            case UpgradeType.Health:
+                player.stats.maxHealth = Mathf.CeilToInt(player.stats.maxHealth * 1.10f);
+                break;
+            case UpgradeType.Attack:
+                player.stats.attack = Mathf.CeilToInt(player.stats.attack * 1.15f);
+                break;
+            case UpgradeType.Defense:
+                player.stats.defense = Mathf.CeilToInt(player.stats.defense * 1.12f);
+                break;
+        }
+
+        // Actualizar el status panel para reflejar los cambios
+        player.statusPanel.SetStats(player.stats, player.idName);
+    }
+
+
 }

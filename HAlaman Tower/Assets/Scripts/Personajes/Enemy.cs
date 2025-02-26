@@ -6,7 +6,7 @@ public class Enemy : Fighter
 {
     private void Awake()
     {
-        this.stats = new Stats(1, 15, 5, 1, 3);
+        this.stats = new Stats(10, 15, 5, 1, 3);
 
     }
 
