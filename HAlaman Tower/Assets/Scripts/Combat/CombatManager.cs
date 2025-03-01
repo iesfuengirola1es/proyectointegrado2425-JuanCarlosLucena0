@@ -224,7 +224,9 @@ public class CombatManager : MonoBehaviour
         switch (upgrade)
         {
             case UpgradeType.Health:
+               float extraHp=
                 player.stats.maxHealth = Mathf.CeilToInt(player.stats.maxHealth * 1.10f);
+                player.stats.health += extraHp;
                 break;
             case UpgradeType.Attack:
                 player.stats.attack = Mathf.CeilToInt(player.stats.attack * 1.15f);
