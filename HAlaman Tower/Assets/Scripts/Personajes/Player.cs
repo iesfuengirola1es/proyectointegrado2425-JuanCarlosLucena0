@@ -12,8 +12,18 @@ public class Player : Fighter
 
     private void Awake()
     {
+        // Asignar el idName al nombre del usuario guardado
+        if (PlayerPrefs.HasKey("username"))
+        {
+            this.idName = PlayerPrefs.GetString("username");
+        }
+        else
+        {
+            Debug.LogError("No se encontró el nombre de usuario en PlayerPrefs.");
+            this.idName = "Jugador"; // Valor por defecto
+        }
 
-        this.stats = new Stats(1, 25, 7, 2, 5);
+        this.stats = new Stats(1, 1, 7, 2, 5);
 
     }
 

@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+
+
 
 public enum CombatStatus
 {
@@ -25,10 +32,17 @@ public class CombatManager : MonoBehaviour
 
     private Skill currentFighterSkill;
 
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+    public TMP_Text scoreText;
+    public Button restartButton;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        gameOverPanel.SetActive(false); // Ocultar panel al inicio
+
         LogPanel.Write("Battle initiated");
 
         // Verificar si hay un enemigo. Si no, generar uno
@@ -133,6 +147,13 @@ public class CombatManager : MonoBehaviour
                     {
                         this.isCombatActive = false;
                         LogPanel.Write("Defeated!");
+                        StartCoroutine(SendScoreToServer(player.stats.lvl-1));
+                        Debug.Log("El jugador ha perdido la batalla.");
+                        int score = Mathf.Max(0, player.stats.lvl - 1);
+                        ShowGameOver(score);
+                        StartCoroutine(SendScoreToServer(score));
+
+
                     }
                     // Si ambos siguen vivos, continúa el combate
                     else
@@ -240,5 +261,53 @@ public class CombatManager : MonoBehaviour
         player.statusPanel.SetStats(player.stats, player.idName);
     }
 
+    private IEnumerator SendScoreToServer(int playerLvl)
+    {
+        string url = "https://luze0oo0.pythonanywhere.com/score/create";
+
+        // Obtener el user_id de PlayerPrefs
+        if (!PlayerPrefs.HasKey("user_id"))
+        {
+            Debug.LogError("No se encontró user_id en PlayerPrefs.");
+            yield break; // Salir de la corrutina si no hay ID
+        }
+
+        int userId = PlayerPrefs.GetInt("user_id");
+        int score = playerLvl; // Asegurarse de que no sea negativo
+
+        // Crear JSON
+        string jsonData = $"{{\"user_id\":{userId},\"score\":{score}}}";
+        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
+
+        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+        {
+            request.uploadHandler = new UploadHandlerRaw(postData);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Puntaje enviado exitosamente: " + request.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError("Error al enviar el puntaje: " + request.error);
+            }
+        }
+    }
+
+    private void ShowGameOver(int score)
+    {
+        gameOverPanel.SetActive(true);
+        scoreText.text = $"Score: {score}";
+        restartButton.onClick.AddListener(RestartGame);
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
 }
