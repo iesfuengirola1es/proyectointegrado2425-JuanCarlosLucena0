@@ -121,70 +121,27 @@ public class LoginManager : MonoBehaviour
     private IEnumerator RegisterUser(string username, string email, string password)
     {
         string url = "https://luze0oo0.pythonanywhere.com/user/create";
-
-        // Crear un JSON con los datos del usuario
         string jsonData = $"{{\"nombre\":\"{username}\",\"email\":\"{email}\",\"password\":\"{password}\"}}";
-        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
 
-        // Configurar la solicitud HTTP
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
-        {
-            request.uploadHandler = new UploadHandlerRaw(postData);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            // Enviar solicitud y esperar respuesta
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log("Registro exitoso: " + request.downloadHandler.text);
-            }
-            else
-            {
-                Debug.LogError("Error en el registro: " + request.error);
-            }
-        }
+        yield return StartCoroutine(ApiManager.SendPostRequest(url, jsonData, "Registro exitoso", "Error en el registro"));
+        HidePanel(registerPanel);
+        ShowLoginRegisterButtons();
     }
 
     private IEnumerator LoginUser(string email, string password)
     {
         string url = "https://luze0oo0.pythonanywhere.com/user/login";
-
-        // Crear el JSON con email y contraseña
         LoginRequest loginRequest = new LoginRequest { email = email, password = password };
         string jsonData = JsonUtility.ToJson(loginRequest);
 
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+        yield return StartCoroutine(ApiManager.SendPostRequest(url, jsonData, "Login exitoso", "Error al iniciar sesión", (response) =>
         {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            // Enviar la solicitud y esperar respuesta
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                string responseText = request.downloadHandler.text;
-                Debug.Log("Login exitoso: " + responseText);
-
-                // Convertimos la respuesta en un objeto UserData
-                UserData user = JsonUtility.FromJson<UserData>(responseText);
-
-                // Guardamos los datos del usuario en la sesión
-                SaveUserSession(user);
-
-                // Cargar la escena del juego
-                UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
-            }
-            else
-            {
-                Debug.LogError("Error al iniciar sesión: " + request.downloadHandler.text);
-            }
-        }
+            UserData user = JsonUtility.FromJson<UserData>(response);
+            SaveUserSession(user);
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        }));
     }
+
     private void SaveUserSession(UserData userData)
     {
         PlayerPrefs.SetInt("user_id", userData.id);

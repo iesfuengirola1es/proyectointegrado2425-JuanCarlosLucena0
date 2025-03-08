@@ -265,37 +265,17 @@ public class CombatManager : MonoBehaviour
     {
         string url = "https://luze0oo0.pythonanywhere.com/score/create";
 
-        // Obtener el user_id de PlayerPrefs
         if (!PlayerPrefs.HasKey("user_id"))
         {
             Debug.LogError("No se encontró user_id en PlayerPrefs.");
-            yield break; // Salir de la corrutina si no hay ID
+            yield break;
         }
 
         int userId = PlayerPrefs.GetInt("user_id");
-        int score = playerLvl; // Asegurarse de que no sea negativo
-
-        // Crear JSON
+        int score = Mathf.Max(0, playerLvl);
         string jsonData = $"{{\"user_id\":{userId},\"score\":{score}}}";
-        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
 
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
-        {
-            request.uploadHandler = new UploadHandlerRaw(postData);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log("Puntaje enviado exitosamente: " + request.downloadHandler.text);
-            }
-            else
-            {
-                Debug.LogError("Error al enviar el puntaje: " + request.error);
-            }
-        }
+        yield return StartCoroutine(ApiManager.SendPostRequest(url, jsonData, "Puntaje enviado exitosamente", "Error al enviar el puntaje"));
     }
 
     private void ShowGameOver(int score)
@@ -304,6 +284,14 @@ public class CombatManager : MonoBehaviour
         scoreText.text = $"Score: {score}";
         restartButton.onClick.AddListener(RestartGame);
     }
+    public void ForceGameOver(int score)
+    {
+        this.isCombatActive = false;
+        LogPanel.Write("Has perdido por rendición.");
+        ShowGameOver(score);
+        StartCoroutine(SendScoreToServer(score));
+    }
+
 
     private void RestartGame()
     {

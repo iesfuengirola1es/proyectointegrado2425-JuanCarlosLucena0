@@ -23,7 +23,7 @@ public class Player : Fighter
             this.idName = "Jugador"; // Valor por defecto
         }
 
-        this.stats = new Stats(1, 1, 7, 2, 5);
+        this.stats = new Stats(1, 25, 7, 2, 5);
 
     }
 
