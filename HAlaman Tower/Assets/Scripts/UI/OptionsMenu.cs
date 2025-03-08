@@ -82,14 +82,29 @@ public class OptionsMenu : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
+                if (scoresPanel == null || scoresText == null)
+                {
+                    Debug.LogError("scoresPanel o scoresText no están asignados en el Inspector.");
+                    yield break;
+                }
+
                 scoresPanel.SetActive(true);
-                scoresText.text = request.downloadHandler.text;
+
+                string json = request.downloadHandler.text;
+                ScoreList scoreList = JsonUtility.FromJson<ScoreList>(json);
+
+                scoresText.text = "";
+                foreach (var entry in scoreList.scores)
+                {
+                    scoresText.text += $"Score: {entry.score} Usuario: {entry.username}\n";
+                }
             }
             else
             {
-                Debug.LogError("Error al obtener los scores: " + request.error);
+                Debug.LogError("Error al obtener los scores del usuario: " + request.error);
             }
         }
+
     }
 
     private IEnumerator GetTopScores()
