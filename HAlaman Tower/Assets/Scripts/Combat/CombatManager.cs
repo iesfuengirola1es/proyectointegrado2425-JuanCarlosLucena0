@@ -290,6 +290,8 @@ public class CombatManager : MonoBehaviour
         LogPanel.Write("Has perdido por rendición.");
         ShowGameOver(score);
         StartCoroutine(SendScoreToServer(score));
+        MusicManager1.Instance.PlayMusic(MusicManager1.Instance.gameOverMusic);
+
     }
 
 
