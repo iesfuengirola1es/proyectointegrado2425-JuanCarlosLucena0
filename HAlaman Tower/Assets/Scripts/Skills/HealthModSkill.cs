@@ -18,7 +18,7 @@ public class HealthModSkill : Skill
     //override de la funcion "OnRun" que se ejecuta en cada turno de los personajes
     protected override void OnRun()
     {
-        //Cogemos la cantidad segun el tipo de modificacion de salud
+        //Cogemos la cantidad según el tipo de modificacion de salud
         float amount = this.GetModification();
 
         //Modificamos la salud del receptor segun el calculo realizado anteriormente 

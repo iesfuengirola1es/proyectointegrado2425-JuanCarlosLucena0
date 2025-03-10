@@ -117,7 +117,7 @@ public class CombatManager : MonoBehaviour
                         player.LevelUp();
                         CheckLevelUp(player);
 
-                        // Esperar un momento antes de reemplazar al enemigo (opcional)
+                        // Esperar un momento antes de reemplazar al enemigo
                         yield return new WaitForSeconds(8f);
 
                         // Reemplazar enemigo con uno nuevo
@@ -126,7 +126,6 @@ public class CombatManager : MonoBehaviour
                         // Esperar a que el nuevo enemigo se genere antes de continuar el combate
                         yield return new WaitForSeconds(0.5f);
 
-                        // **NUEVO CÓDIGO: Obtener y asignar el nuevo enemigo**
                         Fighter newEnemy = enemySpawner.currentEnemy.GetComponent<Fighter>();
 
                         if (newEnemy != null)
@@ -200,7 +199,7 @@ public class CombatManager : MonoBehaviour
     {
         if (this.fighters.Contains(fighterToRemove))
         {
-            this.fighters.Remove(fighterToRemove); // Usamos .Remove() en lugar de convertir a lista
+            this.fighters.Remove(fighterToRemove); 
         }
     }
 

@@ -19,11 +19,10 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError("No hay enemigos en la lista!");
             return;
         }
-
+        //Cogemos un enemigo de la lista
         int randomIndex = Random.Range(0, enemyPrefabs.Length);
         currentEnemy = Instantiate(enemyPrefabs[randomIndex], spawnPoint.position, Quaternion.identity);
 
-        // Asegúrate de que el nuevo enemigo tenga asignado su StatusPanel
         Fighter fighter = currentEnemy.GetComponent<Fighter>();
         if (fighter != null)
         {
@@ -66,7 +65,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
     }
-
+    // Elimina el enemigo de la lista de combatientes
     public void RemoveEnemy()
     {
         if (currentEnemy != null)
@@ -81,6 +80,7 @@ public class EnemySpawner : MonoBehaviour
             currentEnemy = null;
         }
     }
+    // Hacer reaparecer un enemigo
     public void RespawnEnemy()
     {
         int newLevel = 1; // Nivel base

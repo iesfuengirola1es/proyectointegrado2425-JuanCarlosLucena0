@@ -33,7 +33,6 @@ public class MusicManager1 : MonoBehaviour
     // Método para cambiar la música
     public void PlayMusic(AudioClip newClip)
     {
-        //if (audioSource.clip == newClip) return; // Evitar reiniciar la misma música
         audioSource.Stop(); // Detener la música actual
         audioSource.clip = newClip; // Cambiar la canción
         audioSource.Play(); // Reproducir nueva música
