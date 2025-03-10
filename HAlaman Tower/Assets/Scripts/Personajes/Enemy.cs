@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Scrip para los enemigos
 public class Enemy : Fighter
 {
     private void Awake()

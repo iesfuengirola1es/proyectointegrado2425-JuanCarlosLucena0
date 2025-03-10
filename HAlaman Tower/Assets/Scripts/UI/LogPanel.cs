@@ -15,7 +15,7 @@ public class LogPanel : MonoBehaviour
     {
         current=this;
     }
-
+    //Escribe en el log panel
     public static void Write(string message)
     {
         current.logLabel.text = message;

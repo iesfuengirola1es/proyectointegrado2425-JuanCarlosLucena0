@@ -14,7 +14,7 @@ public class lvlUpInfo : MonoBehaviour
     {
         gameObject.SetActive(false);  // Ocultar el popup al inicio
     }
-
+    //Muestra el pop up
     public void ShowPopup(string playerName, int newLevel, float hpIncrease, float atkIncrease, float defIncrease)
     {
         // Asegúrate de que levelUpText esté asignado
@@ -34,7 +34,7 @@ public class lvlUpInfo : MonoBehaviour
         gameObject.SetActive(true);
         StartCoroutine(HidePopupAfterDelay());
     }
-
+    //Lo quita despues de un tiempo
     private IEnumerator HidePopupAfterDelay()
     {
         // Espera el tiempo configurado antes de ocultar el popup

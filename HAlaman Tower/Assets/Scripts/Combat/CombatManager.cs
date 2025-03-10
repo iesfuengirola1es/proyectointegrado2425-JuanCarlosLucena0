@@ -67,7 +67,7 @@ public class CombatManager : MonoBehaviour
         StartCoroutine(this.CombatLoop());
 
     }
-
+    //Bucle de acciones del combate
     IEnumerator CombatLoop()
     {
         while (this.isCombatActive)
@@ -189,13 +189,13 @@ public class CombatManager : MonoBehaviour
             }
         }
     }
-
+    //Agrega un nuevo luchador
     public void AddFighter(Fighter newFighter)
     {
-        this.fighters.Add(newFighter); // Usamos .Add() en lugar de convertir a lista
+        this.fighters.Add(newFighter); 
         newFighter.combatManager = this;  // Asignamos el CombatManager al nuevo luchador
     }
-
+    //Quita un luchador
     public void RemoveFighter(Fighter fighterToRemove)
     {
         if (this.fighters.Contains(fighterToRemove))
@@ -204,7 +204,7 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-
+    //Optiene el luchador opuesto
     public Fighter GetOppositeFighter()
     {
         if (this.fighterIndex == 0)
@@ -224,7 +224,7 @@ public class CombatManager : MonoBehaviour
         this.currentFighterSkill = skill;
         this.combatStatus = CombatStatus.FIGHTER_ACTION;
     }
-
+    //Comprueba el nivel al que acaba de subir el luchador seleccionado
     public void CheckLevelUp(Fighter player)
     {
         if (player.stats.lvl % 10 == 1 && player.stats.lvl != 1) // Si es nivel 11, 21, 31...
@@ -233,13 +233,13 @@ public class CombatManager : MonoBehaviour
             ShowUpgradePopup(player); // Pasamos el jugador
         }
     }
-
+    //Muestra el pop up con las mejoras
     void ShowUpgradePopup(Fighter player)
     {
         UpgradePopup.Instance.Show(player, OnUpgradeSelected);
         Debug.Log($"player preupgrade hp:{player.stats.maxHealth},  player attack: {player.stats.attack}, player defense: {player.stats.defense}");
     }
-
+    // Según la mejora realiza una acción
     void OnUpgradeSelected(Fighter player, UpgradeType upgrade)
     {
         switch (upgrade)
@@ -260,7 +260,7 @@ public class CombatManager : MonoBehaviour
         // Actualizar el status panel para reflejar los cambios
         player.statusPanel.SetStats(player.stats, player.idName);
     }
-
+    //Manda el Score al servidor
     private IEnumerator SendScoreToServer(int playerLvl)
     {
         string url = "https://luze0oo0.pythonanywhere.com/score/create";
@@ -277,13 +277,14 @@ public class CombatManager : MonoBehaviour
 
         yield return StartCoroutine(ApiManager.SendPostRequest(url, jsonData, "Puntaje enviado exitosamente", "Error al enviar el puntaje"));
     }
-
+    //Muestra la pantalla de GameOver
     private void ShowGameOver(int score)
     {
         gameOverPanel.SetActive(true);
         scoreText.text = $"Score: {score}";
         restartButton.onClick.AddListener(RestartGame);
     }
+    //Acaba la partida forzadamente
     public void ForceGameOver(int score)
     {
         this.isCombatActive = false;
@@ -294,7 +295,7 @@ public class CombatManager : MonoBehaviour
 
     }
 
-
+    //Reinicia el juego
     private void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

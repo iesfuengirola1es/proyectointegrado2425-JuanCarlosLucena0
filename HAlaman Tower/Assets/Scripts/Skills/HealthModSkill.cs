@@ -24,12 +24,12 @@ public class HealthModSkill : Skill
         //Modificamos la salud del receptor segun el calculo realizado anteriormente 
         this.receiver.ModifyHeath(amount);
     }
-
+    //Realiza la acción correspondiente a la vida según el tipo de modificacion de vida
     public float GetModification()
     {
         switch (this.modType)
         {
-            case HealthModType.STAT_BASE:
+            case HealthModType.STAT_BASE: //Si la modificacion de vida se basa en el ataque y la defensa
 
                 //Recogemos los stats del emisor
                 Stats emitterStats = this.emitter.GetCurrentStats();
@@ -43,10 +43,11 @@ public class HealthModSkill : Skill
                 Debug.Log((rawDamage/50) - 2);
                 return (rawDamage / 50) - 2;
 
-            case HealthModType.FIXED:
+            case HealthModType.FIXED:  //Si la cantidad es fija
+
                 return this.amount;
 
-            case HealthModType.PERCENTAGE:
+            case HealthModType.PERCENTAGE: // Si afecta a un porcentaje de la vida
                 Stats rStats = this.receiver.GetCurrentStats();
 
                 return rStats.maxHealth * this.amount;

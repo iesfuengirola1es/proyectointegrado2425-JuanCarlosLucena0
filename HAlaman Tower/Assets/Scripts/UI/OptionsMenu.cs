@@ -43,35 +43,35 @@ public class OptionsMenu : MonoBehaviour
     {
         StartCoroutine(GetTopScores());
     }
-
+    //Aceptar derrota
     public void Surrender()
     {
         int score = Mathf.Max(0, player.stats.lvl - 1);
         optionsPanel.SetActive(false);
         combatManager.ForceGameOver(score); // Llamamos a la función que maneja la derrota
     }
-
+    //Mostrar stats
     public void ShowStats()
     {
         statsPanel.SetActive(true);
         statsText.text = $"Nivel: {player.stats.lvl}\nVida: {player.stats.health}\nFuerza: {player.stats.attack}\nDefensa: {player.stats.defense}";
     }
-
+    //Cerrar stats
     public void CloseStats()
     {
         statsPanel.SetActive(false);
     }
-
+    //Ir al menú
     public void GoToMainMenu()
     {
         SceneManager.LoadScene("LoginScene");
     }
-
+    //Cerrar panel de scores
     public void CloseScoresPanel()
     {
         scoresPanel.SetActive(false);
     }
-
+    //Coger scores del usuario
     private IEnumerator GetUserScores()
     {
         string url = $"https://luze0oo0.pythonanywhere.com/score/user/{PlayerPrefs.GetInt("user_id")}";

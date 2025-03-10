@@ -25,7 +25,7 @@ public abstract class Fighter : MonoBehaviour
 
         this.skills = this.GetComponentsInChildren<Skill>();
     }
-
+    //Modifica la vida de los luchadores
     public void ModifyHeath(float amount)
     {
         //Modificamos la vida en funcion de la cantidad establecida
@@ -37,6 +37,7 @@ public abstract class Fighter : MonoBehaviour
         this.statusPanel.SetHealth(this.stats.health, this.stats.maxHealth);
     }
 
+    // Se encarga de subir el nivel del luchador establecido, subiendo la vida, ataque y defensa, la vida entre 3 y 6, y ataque y defensa entre 1 y 4
     public void LevelUp()
     {
         Debug.Log($"Antes del Level Up: Nivel {this.stats.lvl}, Salud {this.stats.health}/{this.stats.maxHealth}, Ataque {this.stats.attack}, Defensa {this.stats.defense}");
@@ -77,15 +78,14 @@ public abstract class Fighter : MonoBehaviour
         // Esperar 5 segundos antes de pasar al siguiente mensaje
         yield return new WaitForSeconds(5f);
 
-        // Aquí podríamos limpiar el log o hacer algo más si es necesario
         LogPanel.Write(""); // Limpiar el log o mostrar el siguiente mensaje
     }
-
+    // Obtiene las estadisticas actuales
         public Stats GetCurrentStats()
     {
 
         return this.stats;
     }
-
+    //Metodo abstracto para iniciar el turno
     public abstract void InitTurn();
 }

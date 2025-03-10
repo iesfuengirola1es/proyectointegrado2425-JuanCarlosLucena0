@@ -72,6 +72,7 @@ public class LoginManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
         {
+            // Llamamos a la API para validar los datos en el servidor.
             StartCoroutine(LoginUser(email, password));
         }
         else
@@ -80,7 +81,6 @@ public class LoginManager : MonoBehaviour
         }
 
         Debug.Log($"Intentando iniciar sesión con Email: {email} y Contraseña: {password}");
-        // Aquí llamaremos a la API para validar los datos en el servidor.
     }
 
     // Recoge usuario, email y contraseña en al creación
@@ -92,6 +92,7 @@ public class LoginManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
         {
+            // Llamamos a la API para registrar la cuenta en el servidor.
             StartCoroutine(RegisterUser(username, email, password));
         }
         else
@@ -100,7 +101,6 @@ public class LoginManager : MonoBehaviour
         }
 
         Debug.Log($"Registrando Usuario: {username}, Email: {email}, Contraseña: {password}");
-        // Aquí llamaremos a la API para registrar la cuenta en el servidor.
     }
 
     // Método para ocultar los botones
@@ -128,6 +128,7 @@ public class LoginManager : MonoBehaviour
         ShowLoginRegisterButtons();
     }
 
+    //Login de usuario
     private IEnumerator LoginUser(string email, string password)
     {
         string url = "https://luze0oo0.pythonanywhere.com/user/login";
@@ -142,6 +143,7 @@ public class LoginManager : MonoBehaviour
         }));
     }
 
+    //Guarda los datos del usuario
     private void SaveUserSession(UserData userData)
     {
         PlayerPrefs.SetInt("user_id", userData.id);
@@ -150,6 +152,7 @@ public class LoginManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    //Carga los datos del usuario
     private void LoadUserSession()
     {
         if (PlayerPrefs.HasKey("user_id"))
@@ -166,6 +169,7 @@ public class LoginManager : MonoBehaviour
         }
     }
 
+    //Desloguea del juego quitando los datos
     public void Logout()
     {
         PlayerPrefs.DeleteKey("user_id");
